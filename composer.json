@@ -1,0 +1,16 @@
+{
+  "name": "timopaul/processingpartners-php-sdk",
+  "description": "An SDK to facilitate the integration of a PHP application with ProcessingPartners' API.\n\n",
+  "type": "library",
+  "require": {
+    "php": ">=7.4.0"
+  },
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Timo Paul",
+      "email": "mail@timopaul.biz"
+    }
+  ],
+  "minimum-stability": "dev"
+}
