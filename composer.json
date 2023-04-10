@@ -1,5 +1,5 @@
 {
-    "name": "timo/processingpartners-php-sdk",
+    "name": "timopaul/processingpartners-php-sdk",
     "description": "An SDK to facilitate the integration of a PHP application with ProcessingPartners' API.",
     "type": "library",
     "autoload": {
