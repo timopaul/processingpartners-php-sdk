@@ -28,7 +28,7 @@ class MissingPropertyException extends Exception
      * @param ?mixed $class
      * @return self
      */
-    static public function create(string $property, $class = null): self
+    public static function create(string $property, $class = null): self
     {
         if (null !== $class && ! is_string($class)) {
             $class = basename(get_class($class));

@@ -28,7 +28,7 @@ class UnknownParameterException extends Exception
      * @param string $name
      * @return self
      */
-    static public function create(string $name): self
+    public static function create(string $name): self
     {
         return new static(sprintf(
             'Unknown parameter `%s`!',

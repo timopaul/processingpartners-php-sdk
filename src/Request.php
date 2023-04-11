@@ -18,7 +18,6 @@
 
 namespace TimoPaul\ProcessingPartners;
 
-use CurlHandle;
 use TimoPaul\ProcessingPartners\Exceptions\MissingPropertyException;
 use TimoPaul\ProcessingPartners\Traits\HasParameters;
 
@@ -160,10 +159,10 @@ abstract class Request
     /**
      * Sets the curl options of this request and all traits used.
      *
-     * @param CurlHandle $curl
+     * @param resource $curl
      * @return Request
      */
-    public function setCurlOptions(CurlHandle $curl): Request
+    public function setCurlOptions($curl): Request
     {
         if (method_exists($this, 'getCurlMethod')) {
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $this->getCurlMethod());

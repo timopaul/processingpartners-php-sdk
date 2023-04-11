@@ -289,7 +289,7 @@ class Client
      * @throws MissingPropertyException
      * @throws UnauthorizedAccessException
      */
-    public function sendRequest(Request $request, int $tries = 2): array|stdClass|null
+    public function sendRequest(Request $request, int $tries = 2)
     {
         $this->resetStatusProperties();
 
@@ -327,7 +327,7 @@ class Client
                     $this->setCurlError('API down');
                     break;
                 case 401:
-                    throw UnauthorizedAccessException::build($url);
+                    throw UnauthorizedAccessException::create($url);
                 default:
                     $this->setCurlError(null);
                     break;

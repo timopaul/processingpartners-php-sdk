@@ -28,7 +28,7 @@ class UnauthorizedAccessException extends Exception
      * @param string $url
      * @return self
      */
-    public function build(string $url): self
+    public static function create(string $url): self
     {
         return new static(sprintf(
             'Unauthorized access to the url `%s`!',

@@ -26,10 +26,10 @@ class InvalidParameterException extends Exception
      * Creates a new exception to itself and returns it.
      *
      * @param string $name
-     * @param mixed $request
+     * @param mixed|null $request
      * @return self
      */
-    static public function create(string $name, mixed $request = null): self
+    public static function create(string $name, $request = null): self
     {
         if (null !== $request && ! is_string($request)) {
             $request = basename(get_class($request));
