@@ -13,6 +13,9 @@
             "email": "mail@timopaul.biz"
         }
     ],
+    "license": [
+        "MIT"
+    ],
     "minimum-stability": "dev",
     "require": {
         "ext-curl": "*",
