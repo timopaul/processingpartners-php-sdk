@@ -1,25 +1,38 @@
 {
     "name": "timopaul/processingpartners-php-sdk",
     "description": "An SDK to facilitate the integration of a PHP application with ProcessingPartners' API.",
-    "type": "library",
-    "autoload": {
-        "psr-4": {
-            "TimoPaul\\ProcessingPartners\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Timo Paul",
-            "email": "mail@timopaul.biz"
-        }
+    "keywords": [
+        "processingpartners",
+        "psp",
+        "api",
+        "sdk"
     ],
+    "type": "library",
     "license": [
         "MIT"
     ],
+    "authors": [
+        {
+            "name": "Timo Paul",
+            "email": "mail@timopaul.biz",
+            "homepage": "https://timopaul.biz/",
+            "role": "maintainer and developer"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/timopaul/processingpartners-php-sdk",
+        "issues": "https://github.com/timopaul/processingpartners-php-sdk/issues"
+    },
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.4.0",
         "ext-curl": "*",
         "ext-json": "*"
-    }
+    },
+    "autoload": {
+        "psr-4": {
+            "TimoPaul\\ProcessingPartners\\": "src/"
+        }
+    },
+    "prefer-stable": true
 }
