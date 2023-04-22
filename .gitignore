@@ -1,1 +1,7 @@
 /vendor/
+/.idea/deployment.xml
+/.idea/modules.xml
+/.idea/php.xml
+/.idea/processingpartners-php-sdk.iml
+/.idea/vcs.xml
+/.idea/.gitignore
