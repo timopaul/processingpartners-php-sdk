@@ -29,7 +29,7 @@ class Client
      *
      * @const string
      */
-    const API_LIVE_URL = 'https://eu-prod.oppwa.com/';
+    const API_LIVE_URL = 'https://eu-prod.oppwa.com/v1/';
 
     /**
      * The URL under which the sandbox API can be reached for testing at ProcessingPartners.
