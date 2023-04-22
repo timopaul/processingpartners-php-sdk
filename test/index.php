@@ -4,6 +4,7 @@ require_once realpath(__DIR__ . '/..') . '/autoload.php';
 
 use TimoPaul\ProcessingPartners\Client;
 use TimoPaul\ProcessingPartners\Requests\GetPayment;
+use TimoPaul\ProcessingPartners\Requests\GetQuery;
 use TimoPaul\ProcessingPartners\Requests\SendPayment;
 
 /**
@@ -111,6 +112,16 @@ function getPayment(): string
 }
 
 
+function getQuery(): string
+{
+    $query = filter_input(INPUT_POST, 'getQuery-query');
+
+    $client = getClient();
+    $request = $client->generateRequest(GetQuery::class)
+        ->addParameter(GetQuery::PARAMETER_QUERY, $query);
+
+    return getResponseOutput($client, $client->sendRequest($request));
+}
 
 
 
@@ -305,6 +316,24 @@ function handleRequest(string $request): ?string
                         <input type="submit" name="getPayment" value="Send request">
                     </div>
                     <?php if ($result = handleRequest('getPayment')) { ?>
+                        <div class="result">
+                            <h4>Result:</h4>
+                            <pre><?php echo $result; ?></pre>
+                        </div>
+                    <?php } ?>
+                </fieldset>
+                <fieldset>
+                    <legend>GetQuery</legend>
+                    <div>
+                        <table>
+                            <tr>
+                                <td width="250">Query</td>
+                                <td><input type="text" name="getQuery-query" value="<?php echo getPostValue('getQuery-query'); ?>" size="30"></td>
+                            </tr>
+                        </table>
+                        <input type="submit" name="getQuery" value="Send request">
+                    </div>
+                    <?php if ($result = handleRequest('getQuery')) { ?>
                         <div class="result">
                             <h4>Result:</h4>
                             <pre><?php echo $result; ?></pre>
