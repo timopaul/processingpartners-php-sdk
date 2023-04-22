@@ -15,12 +15,16 @@ use TimoPaul\ProcessingPartners\Requests\SendPayment;
  */
 function getDefault(string $key): ?string
 {
-    return match ($key) {
-        'token'     => 'YOUR_SANDBOX_ACCESS_TOKEN',
-        'entityId'  => 'YOUR_SANDBOX_ENTITY_ID',
-        'mode'      => 'test',
-        default     => null,
-    };
+    switch ($key) {
+        case 'token';
+            return 'YOUR_SANDBOX_ACCESS_TOKEN';
+        case 'entityId';
+            return 'YOUR_SANDBOX_ENTITY_ID';
+        case 'mode';
+            return 'test';
+    }
+
+    return null;
 }
 
 /**
@@ -31,7 +35,7 @@ function getDefault(string $key): ?string
  * @param int $filter
  * @return mixed|string|null
  */
-function getPostValue(string $key, ?bool $getDefault = false, int $filter = FILTER_DEFAULT): mixed
+function getPostValue(string $key, ?bool $getDefault = false, int $filter = FILTER_DEFAULT)
 {
     if (filter_has_var(INPUT_POST, $key)) {
         $value =  filter_input(INPUT_POST, $key, $filter);
@@ -141,11 +145,11 @@ function handleRequest(string $request): ?string
 }
 
 ?>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>ProcessingPartners PHP SDK - sandbox</title>
-        <style type="text/css">
+        <style>
             * {
                 font-family: verdanam, sans-serif;
             }
@@ -167,15 +171,11 @@ function handleRequest(string $request): ?string
             }
             h4 {
                 margin-top: 20px;
-                margin-bottom: 0px;
+                margin-bottom: 0;
             }
             pre {
                 margin-top: 5px;
                 margin-bottom: 5px;
-            }
-            a.reset {
-                font-size: 80%;
-                text-decoration: none;
             }
         </style>
     </head>
@@ -188,17 +188,17 @@ function handleRequest(string $request): ?string
                     <legend>Base configuration</legend>
                     <table>
                         <tr>
-                            <td width="250">Access Token</td>
-                            <td><input type="text" name="token" value="<?php echo getPostValue('token'); ?>" size="65"></td>
+                            <td><label for="token">Access Token</label></td>
+                            <td><input type="text" name="token" id="token" value="<?php echo getPostValue('token'); ?>" size="65"></td>
                         </tr>
                         <tr>
-                            <td>Entity Id</td>
-                            <td><input type="text" name="entityId" value="<?php echo getPostValue('entityId'); ?>" size="30"></td>
+                            <td><label for="entityId">Entity Id</label></td>
+                            <td><input type="text" name="entityId" id="entityId" value="<?php echo getPostValue('entityId'); ?>" size="30"></td>
                         </tr>
                         <tr>
-                            <td>Mode</td>
+                            <td><label for="mode">Mode</label></td>
                             <td>
-                                <select name="mode" style="width:265px;">
+                                <select name="mode" id="mode" style="width:265px;">
                                     <option value="live" <?php if (getPostValue('mode') == 'live') echo 'selected'; ?>>Live</option>
                                     <option value="test" <?php if (getPostValue('mode') == 'test') echo 'selected'; ?>>Test</option>
                                 </select>
@@ -211,9 +211,9 @@ function handleRequest(string $request): ?string
                     <div>
                         <table>
                             <tr>
-                                <td width="250">Payment type</td>
+                                <td><label for="sendPayment-paymentType">Payment type</label></td>
                                 <td>
-                                    <select type="select" name="sendPayment-paymentType">
+                                    <select name="sendPayment-paymentType" id="sendPayment-paymentType">
                                         <?php foreach ([
                                             'PA' => 'Preauthorization' ,
                                             'DB' => 'Debit' ,
@@ -230,9 +230,9 @@ function handleRequest(string $request): ?string
                                 </td>
                             </tr>
                             <tr>
-                                <td>Brand</td>
+                                <td><label for="sendPayment-paymentBrand">Brand</label></td>
                                 <td>
-                                    <select type="select" name="sendPayment-paymentBrand">
+                                    <select name="sendPayment-paymentBrand" id="sendPayment-paymentBrand">
                                         <?php foreach ([
                                                            'VISA',
                                                            'MASTER',
@@ -249,16 +249,16 @@ function handleRequest(string $request): ?string
                                 </td>
                             </tr>
                             <tr>
-                                <td>Card number</td>
+                                <td><label for="sendPayment-cardNumber">Card number</label></td>
                                 <td>
-                                    <input type="text" name="sendPayment-cardNumber" value="<?php echo getPostValue('sendPayment-cardNumber'); ?>" size="20">
+                                    <input type="text" name="sendPayment-cardNumber" id="sendPayment-cardNumber" value="<?php echo getPostValue('sendPayment-cardNumber'); ?>" size="20">
                                 </td>
                             </tr>
                             <tr>
-                                <td>Amount</td>
+                                <td><label for="sendPayment-amount">Amount</label><label for="sendPayment-currency"></label></td>
                                 <td>
-                                    <input type="text" name="sendPayment-amount" value="<?php echo getPostValue('sendPayment-amount'); ?>" size="5">
-                                    <select type="select" name="sendPayment-currency">
+                                    <input type="text" name="sendPayment-amount" id="sendPayment-amount" value="<?php echo getPostValue('sendPayment-amount'); ?>" size="5">
+                                    <select name="sendPayment-currency" id="sendPayment-currency">
                                         <?php foreach ([
                                             'EUR',
                                             'GBP',
@@ -272,16 +272,16 @@ function handleRequest(string $request): ?string
                                 </td>
                             </tr>
                             <tr>
-                                <td>Expiry</td>
+                                <td><label for="sendPayment-expiryMonth">Expiry</label><label for="sendPayment-expiryYear"></label></td>
                                 <td>
-                                    <select type="select" name="sendPayment-expiryMonth">
+                                    <select name="sendPayment-expiryMonth" id="sendPayment-expiryMonth">
                                         <?php for ($month = 1; $month <= 12; $month++) { ?>
                                             <option value="<?php echo str_pad($month, 2, '0', STR_PAD_LEFT); ?>"
                                                 <?php echo getPostValue('sendPayment-expiryMonth') == $month ? ' selected="selected"' : '' ?>><?php echo date('F', mktime(0, 0, 0, $month, 10)); ?>
                                             </option>
                                         <?php } ?>
                                     </select>
-                                    <select type="select" name="sendPayment-expiryYear">
+                                    <select name="sendPayment-expiryYear" id="sendPayment-expiryYear">
                                         <?php for ($year = date('Y'); $year <= date('Y') + 10; $year++) { ?>
                                             <option value="<?php echo $year; ?>"
                                                 <?php echo getPostValue('sendPayment-expiryYear') == $year ? ' selected="selected"' : '' ?>><?php echo $year; ?>
@@ -309,8 +309,8 @@ function handleRequest(string $request): ?string
                     <div>
                         <table>
                             <tr>
-                                <td width="250">Payment-ID</td>
-                                <td><input type="text" name="getPayment-paymentId" value="<?php echo getPostValue('getPayment-paymentId'); ?>" size="30"></td>
+                                <td><label for="getPayment-paymentId">Payment-ID</label></td>
+                                <td><input type="text" name="getPayment-paymentId" id="getPayment-paymentId" value="<?php echo getPostValue('getPayment-paymentId'); ?>" size="30"></td>
                             </tr>
                         </table>
                         <input type="submit" name="getPayment" value="Send request">
@@ -327,8 +327,8 @@ function handleRequest(string $request): ?string
                     <div>
                         <table>
                             <tr>
-                                <td width="250">Query</td>
-                                <td><input type="text" name="getQuery-query" value="<?php echo getPostValue('getQuery-query'); ?>" size="30"></td>
+                                <td><label for="getQuery-query">Query</label></td>
+                                <td><input type="text" name="getQuery-query" id="getQuery-query" value="<?php echo getPostValue('getQuery-query'); ?>" size="30"></td>
                             </tr>
                         </table>
                         <input type="submit" name="getQuery" value="Send request">
