@@ -30,11 +30,20 @@ class SendPayment extends Request
     const PARAMETER_CURRENCY = 'currency';
     const PARAMETER_PAYMENT_BRAND = 'paymentBrand';
     const PARAMETER_PAYMENT_TYPE = 'paymentType';
+    const PARAMETER_MERCHANT_TRANSACTION_ID = 'merchantTransactionId';
+    const PARAMETER_TRANSACTION_CATEGORY = 'transactionCategory';
     const PARAMETER_CARD_NUMBER = 'card.number';
     const PARAMETER_CARD_HOLDER = 'card.holder';
     const PARAMETER_CARD_EXPIRY_MONTH = 'card.expiryMonth';
     const PARAMETER_CARD_EXPIRY_YEAR = 'card.expiryYear';
     const PARAMETER_CARD_CVV = 'card.cvv';
+    const PARAMETER_MERCHANT_NAME = 'merchant.name';
+    const PARAMETER_MERCHANT_CITY = 'merchant.city';
+    const PARAMETER_MERCHANT_COUNTRY = 'merchant.country';
+    const PARAMETER_MERCHANT_MCC = 'merchant.mcc';
+    const PARAMETER_SHOPPER_RESULT_URL = 'shopperResultUrl';
+    const PARAMETER_CUSTOMER_IP = 'customer.ip';
+    const PARAMETER_TEST_MODE = 'testMode';
 
     protected string $urlPath = 'payments';
 
