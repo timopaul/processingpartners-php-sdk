@@ -26,6 +26,7 @@ class SendPayment extends Request
     use IsPostRequest;
     use HasParameters;
 
+    const PARAMETER_TEST_MODE = 'testMode';
     const PARAMETER_AMOUNT = 'amount';
     const PARAMETER_CURRENCY = 'currency';
     const PARAMETER_PAYMENT_BRAND = 'paymentBrand';
@@ -43,7 +44,6 @@ class SendPayment extends Request
     const PARAMETER_MERCHANT_MCC = 'merchant.mcc';
     const PARAMETER_SHOPPER_RESULT_URL = 'shopperResultUrl';
     const PARAMETER_CUSTOMER_IP = 'customer.ip';
-    const PARAMETER_TEST_MODE = 'testMode';
 
     protected string $urlPath = 'payments';
 
@@ -55,15 +55,24 @@ class SendPayment extends Request
     public function getValidParameters(): array
     {
         return array_merge(parent::getValidParameters(), [
+            self::PARAMETER_TEST_MODE,
             self::PARAMETER_AMOUNT,
             self::PARAMETER_CURRENCY,
             self::PARAMETER_PAYMENT_BRAND,
             self::PARAMETER_PAYMENT_TYPE,
+            self::PARAMETER_MERCHANT_TRANSACTION_ID,
+            self::PARAMETER_TRANSACTION_CATEGORY,
             self::PARAMETER_CARD_NUMBER,
             self::PARAMETER_CARD_HOLDER,
             self::PARAMETER_CARD_EXPIRY_MONTH,
             self::PARAMETER_CARD_EXPIRY_YEAR,
             self::PARAMETER_CARD_CVV,
+            self::PARAMETER_MERCHANT_NAME,
+            self::PARAMETER_MERCHANT_CITY,
+            self::PARAMETER_MERCHANT_COUNTRY,
+            self::PARAMETER_MERCHANT_MCC,
+            self::PARAMETER_SHOPPER_RESULT_URL,
+            self::PARAMETER_CUSTOMER_IP,
         ]);
     }
 }
