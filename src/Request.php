@@ -85,7 +85,7 @@ abstract class Request
         foreach (class_uses(static::class) as $trait) {
             $method = $this->makeUrlPathModificationMethodName($trait);
 
-            if (null !== $methods && method_exists($this, $method)) {
+            if (null !== $method && null !== $methods && method_exists($this, $method)) {
                 $methods[] = $method;
             }
         }
