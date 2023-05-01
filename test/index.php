@@ -5,6 +5,7 @@ require_once realpath(__DIR__ . '/..') . '/autoload.php';
 use TimoPaul\ProcessingPartners\Client;
 use TimoPaul\ProcessingPartners\Requests\GetPayment;
 use TimoPaul\ProcessingPartners\Requests\GetQuery;
+use TimoPaul\ProcessingPartners\Requests\GetResultcodes;
 use TimoPaul\ProcessingPartners\Requests\SendPayment;
 
 /**
@@ -123,6 +124,15 @@ function getQuery(): string
     $client = getClient();
     $request = $client->generateRequest(GetQuery::class)
         ->addParameter(GetQuery::PARAMETER_QUERY, $query);
+
+    return getResponseOutput($client, $client->sendRequest($request));
+}
+
+
+function getResultcodes(): string
+{
+    $client = getClient();
+    $request = $client->generateRequest(GetResultcodes::class);
 
     return getResponseOutput($client, $client->sendRequest($request));
 }
@@ -334,6 +344,20 @@ function handleRequest(string $request): ?string
                         <input type="submit" name="getQuery" value="Send request">
                     </div>
                     <?php if ($result = handleRequest('getQuery')) { ?>
+                        <div class="result">
+                            <h4>Result:</h4>
+                            <pre><?php echo $result; ?></pre>
+                        </div>
+                    <?php } ?>
+                </fieldset>
+
+
+                <fieldset>
+                    <legend>GetResultcodes</legend>
+                    <div>
+                        <input type="submit" name="getResultcodes" value="Send request">
+                    </div>
+                    <?php if ($result = handleRequest('getResultcodes')) { ?>
                         <div class="result">
                             <h4>Result:</h4>
                             <pre><?php echo $result; ?></pre>
