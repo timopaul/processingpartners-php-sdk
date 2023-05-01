@@ -142,7 +142,10 @@ function getResultcodes(): string
 
 function handleRequest(string $request): ?string
 {
-    if (getPostValue($request) && function_exists($request)) {
+    if (getPostValue($request)) {
+        if ( ! function_exists($request)) {
+            return 'Invalid request "' . $request . '"';
+        }
         if ( ! getPostValue('token')) {
             return 'Access Token missing!';
         }
@@ -151,7 +154,7 @@ function handleRequest(string $request): ?string
         }
         return call_user_func($request);
     }
-    return 'Invalid request "' . $request . '"';
+    return null;
 }
 
 ?>
