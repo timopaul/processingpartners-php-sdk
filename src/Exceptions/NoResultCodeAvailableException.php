@@ -15,15 +15,26 @@
    limitations under the License.
 */
 
-namespace TimoPaul\ProcessingPartners\Requests;
 
-use TimoPaul\ProcessingPartners\Request;
-use TimoPaul\ProcessingPartners\Traits\HasParameters;
-use TimoPaul\ProcessingPartners\Traits\IsGetRequest;
+namespace TimoPaul\ProcessingPartners\Exceptions;
 
-class GetResultcodes extends Request
+use Exception;
+use TimoPaul\ProcessingPartners\Response;
+
+class NoResultCodeAvailableException extends Exception
 {
-    use IsGetRequest;
+    /**
+     * Creates a new exception to itself and returns it.
+     *
+     * @param Response $response
+     * @return self
+     */
+    public static function create(Response $response): self
+    {
+        return new static(sprintf(
+            'No result code for `%s` available.!',
+            get_class($response)
+        ));
+    }
 
-    protected string $urlPath = 'resultcodes';
 }

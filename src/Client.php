@@ -18,7 +18,6 @@
 
 namespace TimoPaul\ProcessingPartners;
 
-use stdClass;
 use TimoPaul\ProcessingPartners\Exceptions\MissingPropertyException;
 use TimoPaul\ProcessingPartners\Exceptions\UnauthorizedAccessException;
 
@@ -285,7 +284,7 @@ class Client
      *
      * @param Request $request
      * @param int $tries
-     * @return stdClass|array|null
+     * @return Response|array|null
      * @throws MissingPropertyException
      * @throws UnauthorizedAccessException
      */
@@ -334,7 +333,7 @@ class Client
             }
         }
 
-        return json_decode($response);
+        return $request->buildResponse(json_decode($response));
     }
 
 }

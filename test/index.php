@@ -5,8 +5,9 @@ require_once realpath(__DIR__ . '/..') . '/autoload.php';
 use TimoPaul\ProcessingPartners\Client;
 use TimoPaul\ProcessingPartners\Requests\GetPayment;
 use TimoPaul\ProcessingPartners\Requests\GetQuery;
-use TimoPaul\ProcessingPartners\Requests\GetResultcodes;
+use TimoPaul\ProcessingPartners\Requests\GetResultCodes;
 use TimoPaul\ProcessingPartners\Requests\SendPayment;
+use TimoPaul\ProcessingPartners\Response;
 
 /**
  * Returns the default value for a POST parameter.
@@ -66,7 +67,7 @@ function getErrorOutput(Client $client): string
     ]);
 }
 
-function getResponseOutput(Client $client, $response): string
+function getResponseOutput(Client $client, ?Response $response): string
 {
     if (null === $response) {
         return getErrorOutput($client);
@@ -129,10 +130,10 @@ function getQuery(): string
 }
 
 
-function getResultcodes(): string
+function getResultCodes(): string
 {
     $client = getClient();
-    $request = $client->generateRequest(GetResultcodes::class);
+    $request = $client->generateRequest(GetResultCodes::class);
 
     return getResponseOutput($client, $client->sendRequest($request));
 }
@@ -358,9 +359,9 @@ function handleRequest(string $request): ?string
                 <fieldset>
                     <legend>GetResultcodes</legend>
                     <div>
-                        <input type="submit" name="getResultcodes" value="Send request">
+                        <input type="submit" name="getResultCodes" value="Send request">
                     </div>
-                    <?php if ($result = handleRequest('getResultcodes')) { ?>
+                    <?php if ($result = handleRequest('getResultCodes')) { ?>
                         <div class="result">
                             <h4>Result:</h4>
                             <pre><?php echo $result; ?></pre>

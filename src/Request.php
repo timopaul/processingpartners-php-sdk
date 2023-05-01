@@ -18,6 +18,7 @@
 
 namespace TimoPaul\ProcessingPartners;
 
+use stdClass;
 use TimoPaul\ProcessingPartners\Exceptions\MissingPropertyException;
 use TimoPaul\ProcessingPartners\Traits\HasParameters;
 
@@ -35,11 +36,46 @@ abstract class Request
     protected string $urlPath;
 
     /**
+     * Name of the class returned as a response.
+     *
+     * @var string
+     */
+    protected string $responseClass = Response::class;
+
+    /**
      * Returns the method with which the request should be executed.
      *
      * @return string
      */
     abstract public function getCurlMethod(): string;
+
+    /**
+     * Returns the name of the class returned as a response.
+     *
+     * @return string
+     */
+    protected function getResponseClass(): string
+    {
+        return $this->responseClass;
+    }
+
+    /**
+     * Transforms the stdClass to `Response` this `Request`.
+     *
+     * @param stdClass $stdClass
+     * @return Response
+     */
+    public function buildResponse(stdClass $stdClass): Response
+    {
+        $responseClassName = $this->getResponseClass();
+
+        return unserialize(sprintf(
+            'O:%d:"%s"%s',
+            strlen($responseClassName),
+            $responseClassName,
+            strstr(strstr(serialize($stdClass), '"'), ':')
+        ));
+    }
 
     /**
      * Returns array of valid parameters for current Request.
