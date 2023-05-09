@@ -18,7 +18,6 @@
 
 namespace TimoPaul\ProcessingPartners\Traits;
 
-use CurlHandle;
 use TimoPaul\ProcessingPartners\Request;
 
 trait IsPostRequest
@@ -36,10 +35,10 @@ trait IsPostRequest
     /**
      * Returns the HTTP headers for a POST request
      *
-     * @param CurlHandle $curl
+     * @param mixed $curl
      * @return Request
      */
-    protected function setPostRequestCurlOptions(CurlHandle $curl): Request
+    protected function setPostRequestCurlOptions($curl): Request
     {
         curl_setopt($curl, CURLOPT_POST, true);
         return $this;

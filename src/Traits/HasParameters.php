@@ -18,7 +18,6 @@
 
 namespace TimoPaul\ProcessingPartners\Traits;
 
-use CurlHandle;
 use TimoPaul\ProcessingPartners\Exceptions\InvalidParameterException;
 use TimoPaul\ProcessingPartners\Exceptions\MissingPropertyException;
 use TimoPaul\ProcessingPartners\Exceptions\UnknownParameterException;
@@ -59,9 +58,9 @@ trait HasParameters
             }
         }
 
-        return is_callable([parent, '__call'])
+        return is_callable([parent::class, '__call'])
             ? parent::__call($method, $parameters)
-            : call_user_func_array([parent, $method], $parameters);
+            : call_user_func_array([parent::class, $method], $parameters);
     }
 
     /**
@@ -125,7 +124,7 @@ trait HasParameters
      * @throws MissingPropertyException
      * @throws InvalidParameterException
      */
-    public function addParameter(string $name, mixed $value): Request
+    public function addParameter(string $name, $value): Request
     {
         if ( ! $this->isValidParameter($name)) {
             throw InvalidParameterException::create($name, $this);
@@ -158,7 +157,7 @@ trait HasParameters
      * @return mixed
      * @throws UnknownParameterException
      */
-    public function getParameter(string $name): mixed
+    public function getParameter(string $name)
     {
         if ( ! isset($this->parameters[$name])) {
             throw UnknownParameterException::create($name);
@@ -174,7 +173,7 @@ trait HasParameters
      * @return mixed
      * @throws UnknownParameterException
      */
-    public function removeParameter(string $name): mixed
+    public function removeParameter(string $name)
     {
         $value = $this->getParameter($name);
         unset($this->parameters[$name]);
@@ -219,7 +218,7 @@ trait HasParameters
             // replace parameters in the url-path
             foreach ($parameters as $name => $value) {
                 $key = sprintf('{%s}', $name);
-                if (str_contains($urlPath, $key)) {
+                if (strpos($urlPath, $key)) {
                     $urlPath = str_replace($key, $value, $urlPath);
                     unset($parameters[$name]);
                 }
@@ -236,10 +235,10 @@ trait HasParameters
     /**
      * Sets the CURL options for a request with URL parameters.
      *
-     * @param CurlHandle $curl
+     * @param mixed $curl
      * @return Request
      */
-    protected function setParametersCurlOptions(CurlHandle $curl): Request
+    protected function setParametersCurlOptions($curl): Request
     {
         // set the parameters for post-requests
         if (in_array(IsPostRequest::class, class_uses(static::class))) {
