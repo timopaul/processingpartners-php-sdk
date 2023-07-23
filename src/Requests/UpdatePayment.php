@@ -27,9 +27,8 @@ class UpdatePayment extends Request
     use HasParameters;
     use IsPostRequest;
 
-    const PARAMETER_PAYMENT_ID = 'referencedPaymentId';
+    const PARAMETER_PAYMENT_ID = 'paymentId';
     const PARAMETER_REFERENCED_PAYMENT_ID = 'referencedPaymentId';
-    const PARAMETER_ENTITY_ID = 'entityId';
     const PARAMETER_TEST_MODE = 'testMode';
     const PARAMETER_AMOUNT = 'amount';
     const PARAMETER_CURRENCY = 'currency';
