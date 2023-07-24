@@ -7,6 +7,7 @@ use TimoPaul\ProcessingPartners\Requests\GetPayment;
 use TimoPaul\ProcessingPartners\Requests\GetQuery;
 use TimoPaul\ProcessingPartners\Requests\GetResultCodes;
 use TimoPaul\ProcessingPartners\Requests\SendPayment;
+use TimoPaul\ProcessingPartners\Requests\UpdatePayment;
 use TimoPaul\ProcessingPartners\Response;
 
 /**
@@ -82,6 +83,7 @@ function getResponseOutput(Client $client, ?Response $response): string
     return $output;
 }
 
+
 function sendPayment(): string
 {
     $paymentType = filter_input(INPUT_POST, 'sendPayment-paymentType');
@@ -137,6 +139,25 @@ function getResultCodes(): string
 
     return getResponseOutput($client, $client->sendRequest($request));
 }
+
+
+function updatePayment(): string
+{
+    $referencedPaymentId = filter_input(INPUT_POST, 'updatePayment-referencedPaymentId');
+    $paymentType = filter_input(INPUT_POST, 'updatePayment-paymentType');
+    $amount = filter_input(INPUT_POST, 'updatePayment-amount');
+    $currency = filter_input(INPUT_POST, 'updatePayment-currency');
+
+    $client = getClient();
+    $request = $client->generateRequest(UpdatePayment::class)
+        ->addParameter(UpdatePayment::PARAMETER_REFERENCED_PAYMENT_ID, $referencedPaymentId)
+        ->addParameter(UpdatePayment::PARAMETER_PAYMENT_TYPE, $paymentType)
+        ->addParameter(UpdatePayment::PARAMETER_AMOUNT, $amount)
+        ->addParameter(UpdatePayment::PARAMETER_CURRENCY, $currency);
+
+    return getResponseOutput($client, $client->sendRequest($request));
+}
+
 
 
 
@@ -233,8 +254,6 @@ function handleRequest(string $request): ?string
                                             'DB' => 'Debit' ,
                                             'CD' => 'Credit' ,
                                             'CP' => 'Capture' ,
-                                            'RV' => 'Reversal' ,
-                                            'RF' => 'Refund' ,
                                         ] as $paymentType => $paymentTypeLabel) { ?>
                                             <option value="<?php echo $paymentType; ?>"
                                                 <?php echo getPostValue('sendPayment-paymentType') == $paymentType ? ' selected="selected"' : '' ?>><?php echo $paymentTypeLabel; ?>
@@ -312,6 +331,56 @@ function handleRequest(string $request): ?string
                         </table>
                     </div>
                     <?php if ($result = handleRequest('sendPayment')) { ?>
+                        <div class="result">
+                            <h4>Result:</h4>
+                            <pre><?php echo $result; ?></pre>
+                        </div>
+                    <?php } ?>
+                </fieldset>
+                <fieldset>
+                    <legend>UpdatePayment</legend>
+                    <div>
+                        <table>
+                            <tr>
+                                <td><label for="updatePayment-paymentId">Payment-ID</label></td>
+                                <td><input type="text" name="updatePayment-referencedPaymentId" id="updatePayment-referencedPaymentId" value="<?php echo getPostValue('updatePayment-referencedPaymentId'); ?>" size="30"></td>
+                            </tr>
+                            <tr>
+                                <td><label for="updatePayment-paymentType">Payment type</label></td>
+                                <td>
+                                    <select name="updatePayment-paymentType" id="updatePayment-paymentType">
+                                        <?php foreach ([
+                                                'RF' => 'Refund' ,
+                                                'RV' => 'Reversal' ,
+                                            ] as $paymentType => $paymentTypeLabel) { ?>
+                                            <option value="<?php echo $paymentType; ?>"
+                                                <?php echo getPostValue('updatePayment-paymentType') == $paymentType ? ' selected="selected"' : '' ?>><?php echo $paymentTypeLabel; ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="updatePayment-amount">Amount</label><label for="updatePayment-currency"></label></td>
+                                <td>
+                                    <input type="text" name="updatePayment-amount" id="updatePayment-amount" value="<?php echo getPostValue('updatePayment-amount'); ?>" size="5">
+                                    <select name="updatePayment-currency" id="updatePayment-currency">
+                                        <?php foreach ([
+                                                'EUR',
+                                                'GBP',
+                                                'USD',
+                                            ] as $currency) { ?>
+                                            <option value="<?php echo $currency; ?>"
+                                                <?php echo getPostValue('updatePayment-currency') == $currency ? ' selected="selected"' : '' ?>><?php echo $currency; ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                        <input type="submit" name="updatePayment" value="Send request">
+                    </div>
+                    <?php if ($result = handleRequest('updatePayment')) { ?>
                         <div class="result">
                             <h4>Result:</h4>
                             <pre><?php echo $result; ?></pre>
