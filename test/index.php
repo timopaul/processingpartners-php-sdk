@@ -9,6 +9,7 @@ use TimoPaul\ProcessingPartners\Requests\GetResultCodes;
 use TimoPaul\ProcessingPartners\Requests\SendPayment;
 use TimoPaul\ProcessingPartners\Requests\UpdatePayment;
 use TimoPaul\ProcessingPartners\Response;
+use TimoPaul\ProcessingPartners\Utils\PaymentTypes;
 
 /**
  * Returns the default value for a POST parameter.
@@ -250,10 +251,10 @@ function handleRequest(string $request): ?string
                                 <td>
                                     <select name="sendPayment-paymentType" id="sendPayment-paymentType">
                                         <?php foreach ([
-                                            'PA' => 'Preauthorization' ,
-                                            'DB' => 'Debit' ,
-                                            'CD' => 'Credit' ,
-                                            'CP' => 'Capture' ,
+                                            PaymentTypes::PREAUTHORIZATION => 'Preauthorization' ,
+                                            PaymentTypes::DEBIT => 'Debit' ,
+                                            PaymentTypes::CREDIT => 'Credit' ,
+                                            PaymentTypes::CAPTURE => 'Capture' ,
                                         ] as $paymentType => $paymentTypeLabel) { ?>
                                             <option value="<?php echo $paymentType; ?>"
                                                 <?php echo getPostValue('sendPayment-paymentType') == $paymentType ? ' selected="selected"' : '' ?>><?php echo $paymentTypeLabel; ?>
@@ -267,13 +268,13 @@ function handleRequest(string $request): ?string
                                 <td>
                                     <select name="sendPayment-paymentBrand" id="sendPayment-paymentBrand">
                                         <?php foreach ([
-                                                           'VISA',
-                                                           'MASTER',
-                                                           'AMEX',
-                                                           'MAESTRO',
-                                                           //'SEPA',
-                                                           'VISADEBIT',
-                                                       ] as $paymentBrand) { ?>
+                                                'VISA',
+                                                'MASTER',
+                                                'AMEX',
+                                                'MAESTRO',
+                                                //'SEPA',
+                                                'VISADEBIT',
+                                        ] as $paymentBrand) { ?>
                                             <option value="<?php echo $paymentBrand; ?>"
                                                 <?php echo getPostValue('sendPayment-paymentBrand') == $paymentBrand ? ' selected="selected"' : '' ?>><?php echo $paymentBrand; ?>
                                             </option>
@@ -350,9 +351,9 @@ function handleRequest(string $request): ?string
                                 <td>
                                     <select name="updatePayment-paymentType" id="updatePayment-paymentType">
                                         <?php foreach ([
-                                                'RF' => 'Refund' ,
-                                                'RV' => 'Reversal' ,
-                                            ] as $paymentType => $paymentTypeLabel) { ?>
+                                            PaymentTypes::REFUND => 'Refund' ,
+                                            PaymentTypes::REVERSAL => 'Reversal' ,
+                                        ] as $paymentType => $paymentTypeLabel) { ?>
                                             <option value="<?php echo $paymentType; ?>"
                                                 <?php echo getPostValue('updatePayment-paymentType') == $paymentType ? ' selected="selected"' : '' ?>><?php echo $paymentTypeLabel; ?>
                                             </option>
