@@ -3,6 +3,9 @@
 require_once realpath(__DIR__ . '/..') . '/autoload.php';
 
 use TimoPaul\ProcessingPartners\Client;
+use TimoPaul\ProcessingPartners\Exceptions\InvalidParameterException;
+use TimoPaul\ProcessingPartners\Exceptions\MissingPropertyException;
+use TimoPaul\ProcessingPartners\Exceptions\UnauthorizedAccessException;
 use TimoPaul\ProcessingPartners\Requests\GetPayment;
 use TimoPaul\ProcessingPartners\Requests\GetQuery;
 use TimoPaul\ProcessingPartners\Requests\GetResultCodes;
@@ -10,6 +13,7 @@ use TimoPaul\ProcessingPartners\Requests\SendPayment;
 use TimoPaul\ProcessingPartners\Requests\UpdatePayment;
 use TimoPaul\ProcessingPartners\Response;
 use TimoPaul\ProcessingPartners\Utils\PaymentTypes;
+use TimoPaul\ProcessingPartners\Utils\ThreeDSecureRequestParameter;
 
 /**
  * Returns the default value for a POST parameter.
@@ -85,6 +89,11 @@ function getResponseOutput(Client $client, ?Response $response): string
 }
 
 
+/**
+ * @throws InvalidParameterException
+ * @throws MissingPropertyException
+ * @throws UnauthorizedAccessException
+ */
 function sendPayment(): string
 {
     $paymentType = filter_input(INPUT_POST, 'sendPayment-paymentType');
@@ -96,6 +105,7 @@ function sendPayment(): string
     $expiryYear = filter_input(INPUT_POST, 'sendPayment-expiryYear');
 
     $client = getClient();
+    /** @var SendPayment $request */
     $request = $client->generateRequest(SendPayment::class)
         ->addParameter(SendPayment::PARAMETER_PAYMENT_TYPE, $paymentType)
         ->addParameter(SendPayment::PARAMETER_PAYMENT_BRAND, $brand)
@@ -105,15 +115,34 @@ function sendPayment(): string
         ->addParameter(SendPayment::PARAMETER_CARD_EXPIRY_MONTH, $expiryMonth)
         ->addParameter(SendPayment::PARAMETER_CARD_EXPIRY_YEAR, $expiryYear);
 
+    if (filter_has_var(INPUT_POST, 'sendPayment-3d')) {
+        $screenWidth = filter_input(INPUT_POST, 'sendPayment-screenWidth');
+        $screenHeight = filter_input(INPUT_POST, 'sendPayment-screenHeight');
+        $colorDepth = filter_input(INPUT_POST, 'sendPayment-colorDepth');
+
+        $request->with3dSecure([
+            ThreeDSecureRequestParameter::CUSTOMER_BROWSER_SCREEN_WIDTH => $screenWidth,
+            ThreeDSecureRequestParameter::CUSTOMER_BROWSER_SCREEN_HEIGHT => $screenHeight,
+            ThreeDSecureRequestParameter::CUSTOMER_BROWSER_SCREEN_COLOR_DEPTH => $colorDepth,
+            ThreeDSecureRequestParameter::SHOPPER_RESULT_URL => $_SERVER['HTTP_REFERER'],
+        ]);
+    }
+    
     return getResponseOutput($client, $client->sendRequest($request));
 }
 
 
+/**
+ * @throws MissingPropertyException
+ * @throws UnauthorizedAccessException
+ * @throws InvalidParameterException
+ */
 function getPayment(): string
 {
     $paymentId = filter_input(INPUT_POST, 'getPayment-paymentId');
 
     $client = getClient();
+    /** @var GetPayment $request */
     $request = $client->generateRequest(GetPayment::class)
         ->addParameter(GetPayment::PARAMETER_PAYMENT_ID, $paymentId);
 
@@ -121,11 +150,17 @@ function getPayment(): string
 }
 
 
+/**
+ * @throws MissingPropertyException
+ * @throws UnauthorizedAccessException
+ * @throws InvalidParameterException
+ */
 function getQuery(): string
 {
     $query = filter_input(INPUT_POST, 'getQuery-query');
 
     $client = getClient();
+    /** @var GetQuery $request */
     $request = $client->generateRequest(GetQuery::class)
         ->addParameter(GetQuery::PARAMETER_QUERY, $query);
 
@@ -133,15 +168,25 @@ function getQuery(): string
 }
 
 
+/**
+ * @throws UnauthorizedAccessException
+ * @throws MissingPropertyException
+ */
 function getResultCodes(): string
 {
     $client = getClient();
+    /** @var GetResultCodes $request */
     $request = $client->generateRequest(GetResultCodes::class);
 
     return getResponseOutput($client, $client->sendRequest($request));
 }
 
 
+/**
+ * @throws InvalidParameterException
+ * @throws MissingPropertyException
+ * @throws UnauthorizedAccessException
+ */
 function updatePayment(): string
 {
     $referencedPaymentId = filter_input(INPUT_POST, 'updatePayment-referencedPaymentId');
@@ -150,6 +195,7 @@ function updatePayment(): string
     $currency = filter_input(INPUT_POST, 'updatePayment-currency');
 
     $client = getClient();
+    /** @var UpdatePayment $request */
     $request = $client->generateRequest(UpdatePayment::class)
         ->addParameter(UpdatePayment::PARAMETER_REFERENCED_PAYMENT_ID, $referencedPaymentId)
         ->addParameter(UpdatePayment::PARAMETER_PAYMENT_TYPE, $paymentType)
@@ -325,6 +371,29 @@ function handleRequest(string $request): ?string
                                 </td>
                             </tr>
                             <tr>
+                                <td></td>
+                                <td>
+                                    <?php
+                                        $checked = filter_has_var(INPUT_POST, 'sendPayment-3d');
+                                    ?>
+                                    <input type="checkbox" name="sendPayment-3d" id="sendPayment-3d"
+                                           value="enabled"<?= $checked ? ' checked' : '' ?>>
+                                    <label for="sendPayment-3d">Enable 3D Secure</label>
+                                    <input type="hidden" name="sendPayment-screenWidth">
+                                    <input type="hidden" name="sendPayment-screenHeight">
+                                    <input type="hidden" name="sendPayment-colorDepth">
+                                    <script>
+                                        window.onload = function () {
+                                            const elements = document.getElementById('sdk').elements;
+                                            elements['sendPayment-screenWidth'].value = screen.width;
+                                            elements['sendPayment-screenHeight'].value = screen.height;
+                                            elements['sendPayment-colorDepth'].value = screen.colorDepth;
+                                        }
+                                    </script>
+
+                                </td>
+                            </tr>
+                            <tr>
                                 <td colspan="2">
                                     <input type="submit" name="sendPayment" value="Send request"><br />
                                 </td>
@@ -343,7 +412,7 @@ function handleRequest(string $request): ?string
                     <div>
                         <table>
                             <tr>
-                                <td><label for="updatePayment-paymentId">Payment-ID</label></td>
+                                <td><label for="updatePayment-referencedPaymentId">Payment-ID</label></td>
                                 <td><input type="text" name="updatePayment-referencedPaymentId" id="updatePayment-referencedPaymentId" value="<?php echo getPostValue('updatePayment-referencedPaymentId'); ?>" size="30"></td>
                             </tr>
                             <tr>

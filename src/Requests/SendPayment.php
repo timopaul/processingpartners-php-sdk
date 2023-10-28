@@ -20,11 +20,15 @@ namespace TimoPaul\ProcessingPartners\Requests;
 use TimoPaul\ProcessingPartners\Request;
 use TimoPaul\ProcessingPartners\Traits\HasParameters;
 use TimoPaul\ProcessingPartners\Traits\IsPostRequest;
+use TimoPaul\ProcessingPartners\Traits\With3dSecure;
 
 class SendPayment extends Request
 {
     use IsPostRequest;
     use HasParameters;
+    use With3dSecure {
+        With3dSecure::getValidParameters as getValid3dSecureRequestParameters;
+    }
 
     const PARAMETER_TEST_MODE = 'testMode';
     const PARAMETER_AMOUNT = 'amount';
@@ -54,25 +58,29 @@ class SendPayment extends Request
      */
     public function getValidParameters(): array
     {
-        return array_merge(parent::getValidParameters(), [
-            self::PARAMETER_TEST_MODE,
-            self::PARAMETER_AMOUNT,
-            self::PARAMETER_CURRENCY,
-            self::PARAMETER_PAYMENT_BRAND,
-            self::PARAMETER_PAYMENT_TYPE,
-            self::PARAMETER_MERCHANT_TRANSACTION_ID,
-            self::PARAMETER_TRANSACTION_CATEGORY,
-            self::PARAMETER_CARD_NUMBER,
-            self::PARAMETER_CARD_HOLDER,
-            self::PARAMETER_CARD_EXPIRY_MONTH,
-            self::PARAMETER_CARD_EXPIRY_YEAR,
-            self::PARAMETER_CARD_CVV,
-            self::PARAMETER_MERCHANT_NAME,
-            self::PARAMETER_MERCHANT_CITY,
-            self::PARAMETER_MERCHANT_COUNTRY,
-            self::PARAMETER_MERCHANT_MCC,
-            self::PARAMETER_SHOPPER_RESULT_URL,
-            self::PARAMETER_CUSTOMER_IP,
-        ]);
+        return array_merge(
+            parent::getValidParameters(),
+            $this->getValid3dSecureRequestParameters(),
+            [
+                self::PARAMETER_TEST_MODE,
+                self::PARAMETER_AMOUNT,
+                self::PARAMETER_CURRENCY,
+                self::PARAMETER_PAYMENT_BRAND,
+                self::PARAMETER_PAYMENT_TYPE,
+                self::PARAMETER_MERCHANT_TRANSACTION_ID,
+                self::PARAMETER_TRANSACTION_CATEGORY,
+                self::PARAMETER_CARD_NUMBER,
+                self::PARAMETER_CARD_HOLDER,
+                self::PARAMETER_CARD_EXPIRY_MONTH,
+                self::PARAMETER_CARD_EXPIRY_YEAR,
+                self::PARAMETER_CARD_CVV,
+                self::PARAMETER_MERCHANT_NAME,
+                self::PARAMETER_MERCHANT_CITY,
+                self::PARAMETER_MERCHANT_COUNTRY,
+                self::PARAMETER_MERCHANT_MCC,
+                self::PARAMETER_SHOPPER_RESULT_URL,
+                self::PARAMETER_CUSTOMER_IP,
+            ],
+        );
     }
 }
