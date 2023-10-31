@@ -15,13 +15,25 @@
    limitations under the License.
 */
 
-namespace TimoPaul\ProcessingPartners;
+namespace TimoPaul\ProcessingPartners\Exceptions;
 
-use TimoPaul\ProcessingPartners\Traits\HasRedirect;
-use TimoPaul\ProcessingPartners\Traits\HasResultCode;
+use Exception;
+use TimoPaul\ProcessingPartners\Response;
 
-class Response
+class NoRedirectAvailableException extends Exception
 {
-    use HasRedirect;
-    use HasResultCode;
+    /**
+     * Creates a new exception to itself and returns it.
+     *
+     * @param Response $response
+     * @return self
+     */
+    public static function create(Response $response): self
+    {
+        return new static(sprintf(
+            'No redirect for `%s` available.!',
+            get_class($response)
+        ));
+    }
+
 }
