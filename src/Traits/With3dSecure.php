@@ -53,22 +53,18 @@ trait With3dSecure
         $language = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
         $userAgent = $_SERVER['HTTP_USER_AGENT'];
 
-        $browser = get_browser(null, true);
-        $javaEnabled = (bool) $browser['javaapplets'] ? 'true' : 'false';
-        $javascriptEnabled = (bool) $browser['javascript'] ? 'true' : 'false';
-
         $this->addParameters([
             ThreeDSecureRequestParameter::CUSTOMER_BROWSER_ACCEPT_HEADER => $acceptHeader,
             ThreeDSecureRequestParameter::CUSTOMER_BROWSER_LANGUAGE => $language,
             ThreeDSecureRequestParameter::CUSTOMER_BROWSER_USER_AGENT => $userAgent,
             ThreeDSecureRequestParameter::CUSTOMER_IP => $ip,
-            ThreeDSecureRequestParameter::CUSTOMER_BROWSER_JAVA_ENABLED => $javaEnabled,
-            ThreeDSecureRequestParameter::CUSTOMER_BROWSER_JAVASCRIPT_ENABLED => $javascriptEnabled,
             ThreeDSecureRequestParameter::CUSTOMER_BROWSER_CHALLENGE_WINDOW => 5, // Full screen
             ThreeDSecureRequestParameter::CUSTOMER_BROWSER_TIMEZONE => 60,
             // must be passed to the request
-            //ThreeDSecureRequestParameter::CUSTOMER_BROWSER_SCREEN_HEIGHT => null,
+            //ThreeDSecureRequestParameter::CUSTOMER_BROWSER_JAVA_ENABLED => null,
+            //ThreeDSecureRequestParameter::CUSTOMER_BROWSER_JAVASCRIPT_ENABLED => null,
             //ThreeDSecureRequestParameter::CUSTOMER_BROWSER_SCREEN_WIDTH => null,
+            //ThreeDSecureRequestParameter::CUSTOMER_BROWSER_SCREEN_HEIGHT => null,
             //ThreeDSecureRequestParameter::CUSTOMER_BROWSER_SCREEN_COLOR_DEPTH => null,
         ]);
 
